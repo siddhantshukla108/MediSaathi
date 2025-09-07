@@ -13,36 +13,27 @@ export default function ChatBot({ isOpen, onClose }) {
   const messagesEndRef = useRef(null);
   const dragData = useRef({ isDragging: false, offsetX: 0, offsetY: 0 });
 
-  // Load position from localStorage
   useEffect(() => {
     const saved = localStorage.getItem("chatPosition");
     if (saved) setPosition(JSON.parse(saved));
   }, []);
 
-  // Save position
   useEffect(() => {
     localStorage.setItem("chatPosition", JSON.stringify(position));
   }, [position]);
 
-  // Auto-scroll
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // Dragging functions
   const handleMouseDown = (e) => {
-    // Only drag on header
     if (!e.target.closest(".chat-header")) return;
-
     dragData.current.isDragging = true;
     const rect = chatRef.current.getBoundingClientRect();
     dragData.current.offsetX = e.clientX - rect.left;
     dragData.current.offsetY = e.clientY - rect.top;
-
-    // Disable text selection
     document.body.style.userSelect = "none";
     document.body.style.cursor = "grabbing";
-
     document.addEventListener("mousemove", handleMouseMove);
     document.addEventListener("mouseup", handleMouseUp);
   };
@@ -59,22 +50,12 @@ export default function ChatBot({ isOpen, onClose }) {
     dragData.current.isDragging = false;
     document.body.style.userSelect = "auto";
     document.body.style.cursor = "default";
-
     document.removeEventListener("mousemove", handleMouseMove);
     document.removeEventListener("mouseup", handleMouseUp);
   }, [handleMouseMove]);
 
-  useEffect(() => {
-    return () => {
-      document.removeEventListener("mousemove", handleMouseMove);
-      document.removeEventListener("mouseup", handleMouseUp);
-    };
-  }, [handleMouseMove, handleMouseUp]);
-
-  // Send message
   const handleSendMessage = () => {
     if (!message.trim()) return;
-
     const newUserMessage = { id: Date.now(), text: message, sender: "user" };
     setMessages((prev) => [...prev, newUserMessage]);
     setMessage("");
@@ -109,10 +90,10 @@ export default function ChatBot({ isOpen, onClose }) {
       style={{
         left: `${position.x}px`,
         top: `${position.y}px`,
-        background: "rgba(255,255,255,0.15)",
-        backdropFilter: "blur(12px)",
-        border: "1px solid rgba(255,255,255,0.2)",
-        boxShadow: "0 8px 32px rgba(31,38,135,0.2)",
+        background: "rgba(25,25,25,0.8)", // dark semi-transparent
+        backdropFilter: "blur(15px)",
+        border: "1px solid rgba(255,255,255,0.1)",
+        boxShadow: "0 8px 32px rgba(0,0,0,0.6)",
       }}
       className={`fixed z-50 w-80 rounded-xl flex flex-col overflow-hidden transition-all duration-300 ${
         isMinimized ? "h-12" : "h-96"
@@ -123,8 +104,11 @@ export default function ChatBot({ isOpen, onClose }) {
     >
       {/* Header */}
       <div
-        className="chat-header p-3 flex justify-between items-center border-b border-white/20 cursor-grab"
-        style={{ background: "rgba(255,255,255,0.1)", backdropFilter: "blur(10px)" }}
+        className="chat-header p-3 flex justify-between items-center border-b border-white/10 cursor-grab"
+        style={{
+          background: "rgba(40,40,40,0.85)",
+          backdropFilter: "blur(15px)",
+        }}
       >
         <h3 id="chatbot-heading" className="font-semibold text-white">
           MediBot Assistant
@@ -153,9 +137,11 @@ export default function ChatBot({ isOpen, onClose }) {
               <div key={msg.id} className={`mb-3 ${msg.sender === "user" ? "text-right" : ""}`}>
                 <div
                   className={`inline-block px-3 py-2 rounded-lg max-w-[80%] ${
-                    msg.sender === "user" ? "bg-blue-500/30 text-white" : "bg-white/20 text-white"
+                    msg.sender === "user"
+                      ? "bg-blue-600/50 text-white"
+                      : "bg-gray-700/50 text-white"
                   } backdrop-blur-sm`}
-                  style={{ boxShadow: "0 4px 12px rgba(0,0,0,0.1)" }}
+                  style={{ boxShadow: "0 4px 12px rgba(0,0,0,0.4)" }}
                 >
                   {msg.text}
                 </div>
@@ -166,8 +152,8 @@ export default function ChatBot({ isOpen, onClose }) {
 
           {/* Input */}
           <div
-            className="p-3 border-t border-white/20"
-            style={{ background: "rgba(255,255,255,0.1)", backdropFilter: "blur(10px)" }}
+            className="p-3 border-t border-white/10"
+            style={{ background: "rgba(40,40,40,0.85)", backdropFilter: "blur(15px)" }}
           >
             <div className="flex gap-2">
               <input
@@ -176,13 +162,13 @@ export default function ChatBot({ isOpen, onClose }) {
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 onKeyDown={handleKeyDown}
-                className="flex-1 border border-white/30 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-white/50 bg-white/10 text-white placeholder-white/70"
+                className="flex-1 border border-white/20 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-800/70 text-white placeholder-gray-400"
                 aria-label="Type your message"
               />
               <button
                 onClick={handleSendMessage}
                 disabled={!message.trim()}
-                className="bg-white/20 text-white p-2 rounded-lg hover:bg-white/30 disabled:opacity-50 disabled:cursor-not-allowed transition-colors backdrop-blur-sm"
+                className="bg-blue-600/60 text-white p-2 rounded-lg hover:bg-blue-600/80 disabled:opacity-50 disabled:cursor-not-allowed transition-colors backdrop-blur-sm"
               >
                 <Send size={18} />
               </button>

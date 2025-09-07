@@ -107,7 +107,7 @@ export default function Home() {
             </div>
             
             <div className="mt-6 pt-6 border-t border-gray-200">
-              <button className="w-full py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors">
+              <button className="w-full py-3 bg-gray-700 text-white rounded-lg font-medium hover:bg-gray-600 transition-colors">
                 Get Cost Estimate
               </button>
             </div>
@@ -136,7 +136,7 @@ export default function Home() {
                     </ul>
                   )}
                   
-                  <button className="py-2 px-4 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors">
+                  <button className="py-2 px-4 bg-gray-700 text-white rounded-lg text-sm font-medium hover:bg-gray-600 transition-colors">
                     BOOK APPOINTMENT
                   </button>
                   {index === 0 && <p className="text-xs text-gray-500 mt-2">*136 Apply</p>}
@@ -146,7 +146,7 @@ export default function Home() {
           </section>
 
           {/* Surgery Promotion */}
-          <section className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl shadow-sm p-6 text-white mb-8">
+          <section className="bg-gradient-to-r from-gray-700 to-gray-500 rounded-xl shadow-sm p-6 text-white mb-8">
             <h2 className="text-xl font-bold mb-2">Safe and Secure surgeries</h2>
             <p className="mb-4">Get your first consultation FREE</p>
             
